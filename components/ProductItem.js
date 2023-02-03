@@ -1,10 +1,12 @@
 import { Context } from "@/context/Context";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useContext } from "react";
 
 function ProductItem({ product }) {
   const { state, dispatch } = useContext(Context);
+  const router = useRouter();
 
   const addToCartHandler = (product) => {
     const existItem = state.cart.cartItems.find((item) => item.slug === product.slug);

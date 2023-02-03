@@ -1,10 +1,10 @@
 import { Context } from "@/context/Context";
 import Link from "next/link";
 import { useContext } from "react";
+import dynamic from "next/dynamic";
 
 function Navbar() {
   const { state } = useContext(Context);
-  console.log(state);
 
   const cartQuantity = state.cart.cartItems.reduce((acc, item) => {
     return acc + item.quantity;
@@ -30,4 +30,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default dynamic(() => Promise.resolve(Navbar), { ssr: false });
