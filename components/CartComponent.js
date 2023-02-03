@@ -85,8 +85,7 @@ function CartComponent() {
               <li>
                 <button
                   onClick={() => {
-                    // router.push("login?redirect=/shipping")
-                    router.push("/shipping");
+                    router.push("login?redirect=/shipping");
                   }}
                   className="primary-button w-full"
                 >
