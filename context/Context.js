@@ -4,7 +4,9 @@ import Cookies from "js-cookie";
 export const Context = createContext();
 
 const initialState = {
-  cart: Cookies.get("cart") ? JSON.parse(Cookies.get("cart")) : { cartItems: [] },
+  cart: Cookies.get("cart")
+    ? JSON.parse(Cookies.get("cart"))
+    : { cartItems: [], shippingAddress: {}, paymentMethod: "" },
 };
 
 function reducer(state, action) {
@@ -18,7 +20,7 @@ function reducer(state, action) {
         ? state.cart.cartItems.map((item) => (item.name === existItem.name ? newItem : item))
         : [...state.cart.cartItems, newItem];
 
-      Cookies.set("cart", JSON.stringify({ cartItems: updatedCart }));
+      Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems: updatedCart }));
 
       return {
         ...state,
@@ -27,7 +29,7 @@ function reducer(state, action) {
     case "CART_REMOVE_ITEM":
       const filteredCart = state.cart.cartItems.filter((item) => item.slug !== action.payload.slug);
 
-      Cookies.set("cart", JSON.stringify({ cartItems: filteredCart }));
+      Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems: filteredCart }));
 
       return {
         ...state,
@@ -45,6 +47,49 @@ function reducer(state, action) {
           cartItems: [],
           shippingAddress: { location: {} },
           paymentMethod: "",
+        },
+      };
+    case "SAVE_SHIPPING_ADDRESS":
+      const { fullName, address, city, postalCode, country } = action.payload;
+
+      Cookies.set(
+        "cart",
+        JSON.stringify({
+          ...state.cart,
+          shippingAddress: {
+            fullName,
+            address,
+            city,
+            postalCode,
+            country,
+          },
+        })
+      );
+
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          shippingAddress: {
+            ...state.cart.shippingAddress,
+            ...action.payload,
+          },
+        },
+      };
+    case "SAVE_PAYMENT_METHOD":
+      Cookies.set(
+        "cart",
+        JSON.stringify({
+          ...state.cart,
+          paymentMethod: action.payload,
+        })
+      );
+
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          paymentMethod: action.payload,
         },
       };
     default:

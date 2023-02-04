@@ -74,7 +74,7 @@ function CartComponent() {
             </table>
           </div>
 
-          <div className="card p-5">
+          <div className="card p-5 h-max">
             <ul>
               <li>
                 <div className="pb-3 text-lg">

@@ -24,10 +24,12 @@ function ProductItem({ product }) {
   return (
     <div className="card">
       <Link href={`/product/${product.slug}`}>
-        <img
+        <Image
           src={product.image}
           alt={product.name}
-          className="rounded shadow object-cover h-64 w-full xl:object-top"
+          className="rounded shadow w-full"
+          width={600}
+          height={600}
         />
       </Link>
 
