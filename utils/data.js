@@ -39,7 +39,7 @@ const data = {
       brand: "Adidas",
       rating: 3.2,
       numReviews: 10,
-      countInStock: 20,
+      countInStock: 17,
       description: "A popular shirt",
       isFeatured: true,
       banner: "/images/banner2.jpg",

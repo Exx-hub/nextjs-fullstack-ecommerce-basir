@@ -9,8 +9,6 @@ function ShippingScreen() {
   const { state, dispatch } = useContext(Context);
   const { shippingAddress } = state.cart;
 
-  console.log(shippingAddress);
-
   const {
     register,
     handleSubmit,

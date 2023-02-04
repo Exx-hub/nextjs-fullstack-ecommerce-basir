@@ -12,7 +12,8 @@ function PaymentRadioOptions({ selectedPaymentMethod, setSelectedPaymentMethod }
             id={option}
             type="radio"
             checked={selectedPaymentMethod === option}
-            onChange={() => setSelectedPaymentMethod(option)}
+            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+            value={option}
           />
 
           <label className="p-2" htmlFor={option}>

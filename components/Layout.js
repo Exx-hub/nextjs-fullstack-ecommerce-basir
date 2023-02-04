@@ -14,7 +14,7 @@ function Layout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ToastContainer theme="dark" limit={1} hideProgressBar />
+      <ToastContainer theme="dark" hideProgressBar autoClose={2500} />
       <div className="flex min-h-screen flex-col justify-between">
         <Navbar />
         <main className="m-auto mt-4 px-4 container">{children}</main>

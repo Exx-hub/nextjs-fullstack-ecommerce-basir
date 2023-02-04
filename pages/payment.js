@@ -1,10 +1,9 @@
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
-import CheckoutWizard from "../components/CheckoutWizard";
-
 import { Context } from "@/context/Context";
+
+import CheckoutWizard from "../components/CheckoutWizard";
 import CustomHeadTag from "@/components/CustomHeadTag";
 import PaymentRadioOptions from "@/components/PaymentRadioOptions";
 
@@ -19,7 +18,7 @@ function PaymentScreen() {
 
   useEffect(() => {
     if (!shippingAddress.address) {
-      return router.push("/shipping");
+      router.push("/shipping");
     }
     setSelectedPaymentMethod(paymentMethod || "");
   }, [paymentMethod, router, shippingAddress.address]);
@@ -44,12 +43,8 @@ function PaymentScreen() {
           selectedPaymentMethod={selectedPaymentMethod}
           setSelectedPaymentMethod={setSelectedPaymentMethod}
         />
-        <div className="mb-4 flex justify-between">
-          <button
-            onClick={() => router.push("/shipping")}
-            type="button"
-            className="text-gray-600 font-bold"
-          >
+        <div className="mb-4 flex justify-between items-center">
+          <button onClick={() => router.push("/shipping")} type="button" className="default-button">
             Back
           </button>
           <button type="submit" className="primary-button">

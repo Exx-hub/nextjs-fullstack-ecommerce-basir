@@ -1,33 +1,42 @@
+import axios from "axios";
 import CustomHeadTag from "@/components/CustomHeadTag";
 import { Context } from "@/context/Context";
-import data from "@/utils/data";
+import Product from "@/models/Product";
+
+import db from "@/utils/db";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import { toast } from "react-toastify";
 
-function ProductDetailScreen() {
+export default function ProductDetailScreen({ product }) {
   const { state, dispatch } = useContext(Context);
   const router = useRouter();
-  const { slug } = router.query;
-
-  const product = data.products.find((item) => item.slug === slug);
 
   if (!product) {
-    return <div>Product Not Found!</div>;
+    return (
+      <>
+        <CustomHeadTag title="Product not found." description="Product not found." />
+        <div>Product Not Found!</div>;
+      </>
+    );
   }
 
-  const addToCartHandler = (product) => {
+  const addToCartHandler = async (product) => {
     const existItem = state.cart.cartItems.find((item) => item.slug === product.slug);
     const quantity = existItem ? existItem.quantity + 1 : 1;
 
-    if (product.countInStock < quantity) {
-      // toast warning here
-      alert("Sorry. Product is out of stock.");
-      return;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+
+    console.log({ data });
+
+    if (data.countInStock < quantity) {
+      return toast.error("Sorry, stock limit reached.");
     }
 
     dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    toast.success("Added to Cart!");
   };
 
   return (
@@ -77,4 +86,17 @@ function ProductDetailScreen() {
   );
 }
 
-export default ProductDetailScreen;
+export const getServerSideProps = async (context) => {
+  const { slug } = context.params;
+  await db.connect();
+
+  const product = await Product.findOne({ slug }).lean();
+
+  await db.disconnect();
+
+  return {
+    props: {
+      product: JSON.parse(JSON.stringify(product)),
+    },
+  };
+};

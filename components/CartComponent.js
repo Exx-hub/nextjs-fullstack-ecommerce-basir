@@ -1,21 +1,29 @@
+import axios from "axios";
 import { Context } from "@/context/Context";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import { toast } from "react-toastify";
 
 function CartComponent() {
   const router = useRouter();
   const { state, dispatch } = useContext(Context);
   const { cartItems } = state.cart;
 
-  const updateCartHandler = (product, value) => {
-    console.log({ product, value });
+  const updateCartHandler = async (product, value) => {
+    const { data } = await axios.get(`/api/products/${product._id}`);
+
+    if (data.countInStock < value) {
+      return toast.error("Sorry, stock limit reached.");
+    }
 
     dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity: +value } });
+    toast.success("Cart Updated!");
   };
   const removeCartItem = (product) => {
     dispatch({ type: "CART_REMOVE_ITEM", payload: product });
+    toast.success("Item/s Removed.");
   };
   return (
     <section>
