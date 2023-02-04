@@ -1,5 +1,10 @@
+import { getError } from "@/utils/error";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 function Login() {
   const {
@@ -8,11 +13,32 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const submitHandler = ({ email, password }) => {
-    console.log({ email, password });
-  };
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { redirect } = router.query;
 
-  console.log(errors);
+  useEffect(() => {
+    if (session?.user) {
+      router.push(redirect || "/");
+    }
+  }, [router, session, redirect]);
+
+  const submitHandler = async ({ email, password }) => {
+    console.log({ email, password });
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      if (result.error) {
+        toast.error(result.error);
+      }
+    } catch (err) {
+      toast.error(getError(err));
+    }
+  };
 
   return (
     <form className="max-w-screen-md mx-auto flex flex-col" onSubmit={handleSubmit(submitHandler)}>
@@ -47,7 +73,9 @@ function Login() {
         />
         {errors.password && <span className="text-red-500">{errors.password?.message}</span>}
       </div>
-      <button className="primary-button mb-4">Login</button>
+      <button className="primary-button mb-4">
+        {status === "loading" ? "Please wait..." : "Login"}
+      </button>
       <div>
         Don't have an account? <Link href="/">Register here.</Link>
       </div>
