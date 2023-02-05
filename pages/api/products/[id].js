@@ -7,5 +7,5 @@ export default async function handler(req, res) {
   const product = await Product.findById(id).lean();
   await db.disconnect();
 
-  res.status(200).json(product);
+  res.status(200).send(product);
 }
