@@ -83,7 +83,7 @@ function Login() {
           {status === "loading" ? "Please wait..." : "Login"}
         </button>
         <div>
-          Don't have an account? <Link href={"/register"}>Register</Link>
+          Not yet registered? <Link href={"/register"}>Sign up!</Link>
         </div>
       </form>
     </>
