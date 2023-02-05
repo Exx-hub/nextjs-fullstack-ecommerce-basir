@@ -36,9 +36,16 @@ function reducer(state, action) {
         cart: { cartItems: filteredCart },
       };
     case "CART_CLEAR_ITEMS":
+      Cookies.set(
+        "cart",
+        JSON.stringify({
+          ...state.cart,
+          cartItems: [],
+        })
+      );
       return {
         ...state,
-        cart: { cartItems: [] },
+        cart: { ...state.cart, cartItems: [] },
       };
     case "CART_RESET":
       return {

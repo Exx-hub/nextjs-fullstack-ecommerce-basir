@@ -38,7 +38,7 @@ function OrderSummary({
         </li>
         <li>
           <button disabled={loading} onClick={placeOrderHandler} className="primary-button w-full">
-            {loading ? "Loading..." : "Place Order"}
+            {loading ? "Please wait..." : "Place Order"}
           </button>
         </li>
       </ul>

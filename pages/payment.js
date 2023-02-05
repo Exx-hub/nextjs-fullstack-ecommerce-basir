@@ -17,11 +17,12 @@ function PaymentScreen() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!shippingAddress.address) {
+    if (!shippingAddress?.address) {
+      console.log("WAS HERE");
       router.push("/shipping");
     }
     setSelectedPaymentMethod(paymentMethod || "");
-  }, [paymentMethod, router, shippingAddress.address]);
+  }, [paymentMethod, router, shippingAddress?.address]);
 
   const submitHandler = (e) => {
     e.preventDefault();

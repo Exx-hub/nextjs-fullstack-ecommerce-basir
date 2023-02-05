@@ -26,39 +26,40 @@ function PlaceOrderScreen() {
   const taxPrice = round2(itemsPrice * 0.15);
   const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
 
+  console.log({ cart });
+
   const router = useRouter();
   useEffect(() => {
     if (!paymentMethod) {
-      router.push("/payment");
+      if (cartItems.length > 0) {
+        router.push("/payment");
+      } else {
+        router.push("/");
+      }
     }
-  }, [paymentMethod, router]);
+  }, [paymentMethod]);
 
   const placeOrderHandler = async () => {
-    // try {
-    //   setLoading(true);
-    //   const { data } = await axios.post("/api/orders", {
-    //     orderItems: cartItems,
-    //     shippingAddress,
-    //     paymentMethod,
-    //     itemsPrice,
-    //     shippingPrice,
-    //     taxPrice,
-    //     totalPrice,
-    //   });
-    //   setLoading(false);
-    //   dispatch({ type: "CART_CLEAR_ITEMS" });
-    //   Cookies.set(
-    //     "cart",
-    //     JSON.stringify({
-    //       ...cart,
-    //       cartItems: [],
-    //     })
-    //   );
-    //   router.push(`/order/${data._id}`);
-    // } catch (err) {
-    //   setLoading(false);
-    //   toast.error(getError(err));
-    // }
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/orders", {
+        orderItems: cartItems,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      });
+      setLoading(false);
+
+      dispatch({ type: "CART_CLEAR_ITEMS" });
+
+      router.push(`/order/${data._id}`);
+    } catch (err) {
+      setLoading(false);
+      toast.error(getError(err));
+    }
   };
 
   return (
