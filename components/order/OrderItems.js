@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-function OrderItems({ cartItems }) {
-  console.log({ cartItems });
+function OrderItems({ items, isEdit }) {
+  console.log({ items });
   return (
     <div className="card overflow-x-auto p-5">
       <h2 className="mb-2 text-lg">Order Items</h2>
@@ -16,7 +16,7 @@ function OrderItems({ cartItems }) {
           </tr>
         </thead>
         <tbody>
-          {cartItems.map((item) => (
+          {items?.map((item) => (
             <tr key={item.slug} className="border-b">
               <td>
                 <Link href={`/product/${item.slug}`} className="flex items-center">
@@ -32,9 +32,11 @@ function OrderItems({ cartItems }) {
           ))}
         </tbody>
       </table>
-      <div>
-        <Link href="/cart">Edit</Link>
-      </div>
+      {isEdit && (
+        <div>
+          <Link href="/cart">Edit</Link>
+        </div>
+      )}
     </div>
   );
 }

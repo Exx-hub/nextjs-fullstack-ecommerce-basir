@@ -1,6 +1,6 @@
 import CustomHeadTag from "@/components/CustomHeadTag";
-import OrderItems from "@/components/placeOrder/OrderItems";
-import OrderSummary from "@/components/placeOrder/OrderSummary";
+import OrderItems from "@/components/order/OrderItems";
+import OrderSummary from "@/components/order/OrderSummary";
 import { Context } from "@/context/Context";
 import axios from "axios";
 import Image from "next/image";
@@ -93,16 +93,17 @@ function PlaceOrderScreen() {
               </div>
             </div>
 
-            <OrderItems cartItems={cartItems} />
+            <OrderItems isEdit={true} items={cartItems} />
           </div>
 
           <OrderSummary
+            placeOrderHandler={placeOrderHandler}
+            isPlaceOrder={true}
             itemsPrice={itemsPrice}
             taxPrice={taxPrice}
             shippingPrice={shippingPrice}
             totalPrice={totalPrice}
             loading={loading}
-            placeOrderHandler={placeOrderHandler}
           />
         </div>
       )}
