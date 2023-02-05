@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { getError } from "@/utils/error";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 function RegisterScreen() {
+  const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -26,6 +27,7 @@ function RegisterScreen() {
   } = useForm();
 
   const submitHandler = async ({ name, email, password }) => {
+    setLoading(true);
     try {
       const result = await axios.post("/api/auth/signup", {
         name,
@@ -33,14 +35,17 @@ function RegisterScreen() {
         password,
       });
 
+      setLoading(false);
+
       if (result.error) {
-        toast.error(result.error);
+        return toast.error(result.error);
       }
 
       toast.success("Registration success.");
 
       router.push("/login");
     } catch (err) {
+      setLoading(false);
       toast.error(getError(err));
     }
   };
@@ -116,7 +121,7 @@ function RegisterScreen() {
       </div>
 
       <div className="mb-4 ">
-        <button className="primary-button">Register</button>
+        <button className="primary-button mb-4">{loading ? "Please wait..." : "Register"}</button>
       </div>
       <div className="mb-4 ">
         Already have an account? &nbsp;

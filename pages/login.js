@@ -3,18 +3,19 @@ import { getError } from "@/utils/error";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 function Login() {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const { redirect } = router.query;
 
@@ -25,7 +26,7 @@ function Login() {
   }, [router, session, redirect]);
 
   const submitHandler = async ({ email, password }) => {
-    console.log({ email, password });
+    setLoading(true);
 
     try {
       const result = await signIn("credentials", {
@@ -33,10 +34,15 @@ function Login() {
         password,
         redirect: false,
       });
+
+      setLoading(false);
       if (result.error) {
-        toast.error(result.error);
+        return toast.error(result.error);
       }
+
+      toast.success("Login Success.");
     } catch (err) {
+      setLoading(false);
       toast.error(getError(err));
     }
   };
@@ -79,9 +85,7 @@ function Login() {
           />
           {errors.password && <span className="text-red-500">{errors.password?.message}</span>}
         </div>
-        <button className="primary-button mb-4">
-          {status === "loading" ? "Please wait..." : "Login"}
-        </button>
+        <button className="primary-button mb-4">{loading ? "Please wait..." : "Login"}</button>
         <div>
           Not yet registered? <Link href={"/register"}>Sign up!</Link>
         </div>
